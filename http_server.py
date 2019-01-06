@@ -11,9 +11,14 @@ class TimeoutHTTPServer(HTTPServer):
     self.timeout = 10
     print(time.asctime(), 'Init called !')
 
-
   def handle_timeout(self):
       print(time.asctime(), 'Handle timeout called !')
+
+  def set_last_post(self, last_post_datetime):
+      self.last_post = last_post_datetime
+
+  def get_last_post(self):
+      return self.last_post
 
  
 # HTTPRequestHandler class
@@ -33,6 +38,13 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         # Write content as utf-8 data
         self.wfile.write(bytes(message, "utf8"))
 
+        # check last_post
+        if not self.server.get_last_post():
+            print(time.asctime(), 'Last post never seen')
+
+        if (datetime.datetime.now() - self.server.get_last_post()) > datetime.timedelta(seconds=15):
+            print(time.asctime(), 'Last post older than 15s- %s' % self.server.get_last_post())
+
         return
 
   # POST
@@ -48,6 +60,9 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
         message = "Hello world POST!\n"
         # Write content as utf-8 data
         self.wfile.write(bytes(message, "utf8"))
+
+        # update last_post
+        self.server.set_last_post(datetime.datetime.now())
 
         return
 
