@@ -17,7 +17,7 @@ class TimeoutHTTPServer(HTTPServer):
 
  
 # HTTPRequestHandler class
-class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
+class TimeoutHTTPServer_RequestHandler(BaseHTTPRequestHandler):
  
   # GET
   def do_GET(self):
@@ -55,7 +55,7 @@ class testHTTPServer_RequestHandler(BaseHTTPRequestHandler):
 if __name__ == '__main__':
   print('Starting server...')
   server_address = ('127.0.0.1', 8081)
-  httpd = TimeoutHTTPServer(server_address, testHTTPServer_RequestHandler)
+  httpd = TimeoutHTTPServer(server_address, TimeoutHTTPServer_RequestHandler)
   print(time.asctime(), 'Server Starts - %s:%s' % server_address)
   try:
       while True:
